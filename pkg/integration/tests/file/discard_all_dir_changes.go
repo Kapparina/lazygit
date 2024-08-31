@@ -94,6 +94,15 @@ var DiscardAllDirChanges = NewIntegrationTest(NewIntegrationTestArgs{
 			}).
 			Tap(func() {
 				t.Common().ContinueOnConflictsResolved()
+				t.ExpectPopup().Confirmation().
+					Title(Equals("Continue")).
+					Content(Contains("Files have been modified after staging the resolved conflicts. Auto-stage them and continue?")).
+					Cancel()
+				t.GlobalPress(keys.Universal.CreateRebaseOptionsMenu)
+				t.ExpectPopup().Menu().
+					Title(Equals("Merge options")).
+					Select(Contains("continue")).
+					Confirm()
 			}).
 			Lines(
 				Contains("dir").IsSelected(),
